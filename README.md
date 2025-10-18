@@ -1,6 +1,6 @@
 In this crate, we aiming to implemente a proc-macro named `BorrowKey`.
 This macro should allow a struct to be borrowed as a reference to one of its fields, called `key`, based on `core::borrow::Borrow`.
-And it should also ensure that Eq, Ord, and Hash are implemented correctly according to the documentation requirements below,
+And it should also ensure that Eq, Ord and Hash are implemented correctly according to the documentation requirements below,
 so that this struct can be used in `HashSet` correctly:
 
 > Further, when providing implementations for additional traits,
