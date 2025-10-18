@@ -4,6 +4,21 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn::{Data, DeriveInput, Error, Ident, Type, parse_macro_input, spanned::Spanned};
 
+/// # Example
+/// ```
+/// use borrow_key::BorrowKey;
+/// use core::hash::Hash;
+///
+/// #[derive(Debug, BorrowKey)]
+/// struct Foo<T>
+/// where
+///     T: PartialEq + Eq + PartialOrd + Ord + Hash
+/// {
+///     #[key]
+///     key: T,
+///     value: u8
+/// }
+/// ```
 #[proc_macro_derive(BorrowKey, attributes(key))]
 pub fn derive_borrow_key(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
