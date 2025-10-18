@@ -12,7 +12,7 @@ use syn::{Data, DeriveInput, Error, Ident, Type, parse_macro_input, spanned::Spa
 /// #[derive(Debug, BorrowKey)]
 /// struct Foo<T>
 /// where
-///     T: PartialEq + Eq + PartialOrd + Ord + Hash
+///     T: Eq + Ord + Hash
 /// {
 ///     #[key]
 ///     key: T,
@@ -33,9 +33,20 @@ pub fn derive_borrow_key(input: TokenStream) -> TokenStream {
             for field in data_struct.fields {
                 if let Some(attr) = field.attrs.iter().find(|a| a.meta.path().is_ident("key")) {
                     if key_ident.is_some() || key_type.is_some() {
-                        return Error::new(attr.span(), "expect exact 1 key to be specified")
-                            .to_compile_error()
-                            .into();
+                        return Error::new(
+                            attr.span(),
+                            "`BorrowKey`: expect exact 1 key to be specified",
+                        )
+                        .to_compile_error()
+                        .into();
+                    }
+                    if field.ident.is_none() {
+                        return Error::new(
+                            field.span(),
+                            "`BorrowKey`: tuple struct does not need this proc-macro",
+                        )
+                        .to_compile_error()
+                        .into();
                     }
                     key_ident = field.ident;
                     key_type = match attr.parse_args() {
@@ -46,21 +57,27 @@ pub fn derive_borrow_key(input: TokenStream) -> TokenStream {
             }
         }
         Data::Enum(data_enum) => {
-            return Error::new(data_enum.enum_token.span(), "enum type is not supported")
-                .to_compile_error()
-                .into();
+            return Error::new(
+                data_enum.enum_token.span(),
+                "`BorrowKey`: enum type is not supported",
+            )
+            .to_compile_error()
+            .into();
         }
         Data::Union(data_union) => {
-            return Error::new(data_union.union_token.span(), "union type is not supported")
-                .to_compile_error()
-                .into();
+            return Error::new(
+                data_union.union_token.span(),
+                "`BorrowKey`: union type is not supported",
+            )
+            .to_compile_error()
+            .into();
         }
     }
 
     if key_ident.is_none() || key_type.is_none() {
         return Error::new(
             ident.span(),
-            "expect exact 1 key to be specified with #[key($type?: ty)]",
+            "`BorrowKey`: expect exact 1 key to be specified with #[key($type?: ty)]",
         )
         .to_compile_error()
         .into();
