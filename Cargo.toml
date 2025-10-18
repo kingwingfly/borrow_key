@@ -1,14 +1,16 @@
 [package]
 name = "borrow_key"
-version = "0.1.0"
+version = "0.1.0-alpha.0"
 edition = "2024"
 authors = ["Louis <836250617@qq.com>"]
 license = "MIT"
+document = "https://docs.rs/borrow_key"
+repository = "https://github.com/kingwingfly/borrow_key"
 
 [lib]
 # This is essencial when developing macro crates
 proc-macro = true
 
 [dependencies]
-quote = { version = "1.0.41" }
-syn = { version = "2.0.106" }
+quote = { version = "1.0" }
+syn = { version = "2.0" }

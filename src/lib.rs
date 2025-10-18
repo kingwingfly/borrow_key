@@ -1,58 +1,9 @@
-//! In many cases, we need derive macros to simpify the code.
-//!
-//! e.g.
-//! - Serialize and Deserialize in serde
-//! - Debug in std
-//! - Pod in bytemuck
-//! - FromBytes in zerocopy
-//! - Component in bevy
-//! - Zeroize and ZeroizeOnDrop in zeroize
-//!
-//! They are all widely used and core foundation of Rust crate ecosystem.
-//!
-//! However, just knowing how to use them is always far away from enough.
-//! Without the ability to write your own, one could never fully master Rust and make maintainable Rust project.
-//!
-//! In this example, we aiming to implemente a derive macro named `BorrowKey`.
-//! This macro should allow a struct to be borrowed as a reference to one of its fields, called `key`, based on `std::borrow::Borrow`.
-//! And it should also ensure that Eq, Ord, and Hash are implemented correctly according to the documentation requirements
-//! so that this struct can be used in `HashSet` correctly:
-//!
-//! > Further, when providing implementations for additional traits,
-//! > it needs to be considered whether they should behave
-//! > identically to those of the underlying type as a consequence of acting as a representation of that underlying type.
-//! > Generic code typically uses Borrow<T> when it relies on the identical behavior of these additional trait implementations. T
-//! > hese traits will likely appear as additional trait bounds.
-//! >
-//! > In particular Eq, Ord and Hash must be equivalent for borrowed and owned values: x.borrow() == y.borrow() should give the same result as x == y.
-//! >
-//! > If generic code merely needs to work for all types that can provide a reference to related type T,
-//! > it is often better to use AsRef<T> as more types can safely implement it.
-//!
-//! For more information about why this is needed to be used in HashSet, see https://github.com/kingwingfly/corust-hackathon/blob/dev/hashmap_but_key_ref_to_value/src/lib.rs
-
-#![allow(dead_code)]
+#![doc = include_str!("../README.md")]
 
 use proc_macro::TokenStream;
 use quote::quote;
 use syn::{Data, DeriveInput, Error, Ident, Type, parse_macro_input, spanned::Spanned};
 
-/// # Example
-/// ```
-/// use borrow_key::BorrowKey;
-///
-/// #[derive(BorrowKey)]
-/// struct Foo {
-///     #[key(str)]
-///     key: String,
-/// }
-///
-/// #[derive(BorrowKey)]
-/// struct Bar {
-///     #[key]
-///     key: String,
-/// }
-/// ```
 #[proc_macro_derive(BorrowKey, attributes(key))]
 pub fn derive_borrow_key(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
