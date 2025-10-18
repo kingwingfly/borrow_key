@@ -6,6 +6,7 @@ authors = ["Louis <836250617@qq.com>"]
 license = "MIT"
 document = "https://docs.rs/borrow_key"
 repository = "https://github.com/kingwingfly/borrow_key"
+description = "A proc-macro to derive Borrow as well as Eq, Ord, Hash"
 
 [lib]
 # This is essencial when developing macro crates
