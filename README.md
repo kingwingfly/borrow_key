@@ -12,7 +12,7 @@ so that this struct can be used in `HashSet` correctly:
 > In particular Eq, Ord and Hash must be equivalent for borrowed and owned values: x.borrow() == y.borrow() should give the same result as x == y.
 >
 > If generic code merely needs to work for all types that can provide a reference to related type T,
-> it is often better to use `AsRef<T`>` as more types can safely implement it.
+> it is often better to use `AsRef<T>` as more types can safely implement it.
 
 ```rust
 use std::collections::HashSet;
