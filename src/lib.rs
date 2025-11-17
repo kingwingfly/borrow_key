@@ -98,7 +98,7 @@ pub fn derive_borrow_key(input: TokenStream) -> TokenStream {
 
         impl #impl_generics ::core::cmp::PartialEq for #ident #ty_generics #where_clause {
             fn eq(&self, other: &Self) -> bool {
-                self.key == other.key
+                self.#key_ident == other.#key_ident
             }
         }
 
@@ -112,7 +112,7 @@ pub fn derive_borrow_key(input: TokenStream) -> TokenStream {
 
         impl #impl_generics ::core::cmp::Ord for #ident #ty_generics #where_clause {
             fn cmp(&self, other: &Self) -> ::core::cmp::Ordering {
-                self.key.cmp(&other.key)
+                self.#key_ident.cmp(&other.#key_ident)
             }
         }
 
